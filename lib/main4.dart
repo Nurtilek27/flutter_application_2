@@ -1,50 +1,20 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'info.dart';
 import 'main5 vvod  danyx.dart';
 import 'model.dart';
+
 class NextPage4 extends StatefulWidget {
   final String storeName;
-  final List<ProductModel> productList;
-  final SharedPreferences prefs;
-
-  const NextPage4({
-    Key? key,
-    required this.storeName,
-    required this.productList,
-    required this.prefs,
-  }) : super(key: key);
+  const NextPage4(
+      {Key? key, required this.storeName, required List productList})
+      : super(key: key);
 
   @override
   _NextPage4State createState() => _NextPage4State();
 }
 
 class _NextPage4State extends State<NextPage4> {
-  List<dynamic> productList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    getDataFromSharedPreferences();
-  }
-
-  void getDataFromSharedPreferences() {
-    final savedProductList = widget.prefs.getStringList('productList_${widget.storeName}');
-    if (savedProductList != null) {
-      setState(() {
-        productList = savedProductList
-            .map((json) => ProductModel.fromJson(json))
-            .toList();
-      });
-    }
-  }
-
-  void saveDataToSharedPreferences() {
-    final jsonList = productList.map((product) =>JsonEncoder(product.toJson())).toList();
-    widget.prefs.setStringList('productList_${widget.storeName}', jsonList.cast<String>());
-  }
+  List<ShopModel> shopList = [];
 
   void _navigateToNextPage5() async {
     final result = await Navigator.push(
@@ -59,9 +29,7 @@ class _NextPage4State extends State<NextPage4> {
 
       final productModel = ProductModel(name, date, quantity);
       productList.add(productModel);
-      setState(() {
-        saveDataToSharedPreferences(); // Сохраняем новый продукт в SharedPreferences
-      });
+      setState(() {});
     }
   }
 
@@ -75,7 +43,6 @@ class _NextPage4State extends State<NextPage4> {
   void _removeProduct(int index) {
     setState(() {
       productList.removeAt(index);
-      saveDataToSharedPreferences(); // Сохраняем изменения после удаления продукта
     });
   }
 

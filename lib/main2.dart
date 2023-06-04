@@ -1,9 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/main3.dart';
 import 'package:flutter_application_2/main4.dart';
 import 'package:flutter_application_2/model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart'; // Добавлен импорт
 
 class NextPage extends StatefulWidget {
   const NextPage({Key? key}) : super(key: key);
@@ -13,36 +12,6 @@ class NextPage extends StatefulWidget {
 }
 
 class _NextPageState extends State<NextPage> {
-  late SharedPreferences _prefs;
-  List<dynamic> shopList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    initializeSharedPreferences();
-  }
-
-  Future<void> initializeSharedPreferences() async {
-    _prefs = await SharedPreferences.getInstance();
-    getDataFromSharedPreferences();
-  }
-
-  void getDataFromSharedPreferences() {
-    final savedShopList = _prefs.getStringList('shopList');
-    if (savedShopList != null) {
-      setState(() {
-        shopList = savedShopList
-            .map((json) => ShopModel.fromJson(json))
-            .toList();
-      });
-    }
-  }
-
-  void saveDataToSharedPreferences() {
-     final jsonList = shopList.map((shop) => jsonEncode(shop.toJson())).toList();
-    _prefs.setStringList('shopList', jsonList);
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -62,8 +31,7 @@ class _NextPageState extends State<NextPage> {
                   direction: DismissDirection.startToEnd,
                   onDismissed: (direction) {
                     setState(() {
-                    saveDataToSharedPreferences(); // Сохраняем изменения до удаления магазина
-                      shopList.removeAt(index); 
+                      shopList.removeAt(index);
                     });
                   },
                   background: Container(
@@ -82,10 +50,9 @@ class _NextPageState extends State<NextPage> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => NextPage4(
-                            storeName: shopList[index].name,
-                            productList: const [],
-                            prefs: _prefs,
-                          ),
+                              storeName: shopList[index].name,
+                              productList: const [],
+                              key: ValueKey(shopList[index].name)),
                         ),
                       );
                     },

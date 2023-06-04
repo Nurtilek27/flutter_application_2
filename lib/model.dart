@@ -1,15 +1,14 @@
-
-
 class ShopModel {
-  String name;
-  String address;
+  final String name;
+  final String address;
 
-  ShopModel({required this.name, required this.address});
-
-  static fromJson(String json) {}
-
-  toJson() {}
-}
+  ShopModel(
+    this.name,
+    this.address,
+  );
+  
+ 
+  }
 
 class ProductModel {
   final String name;
